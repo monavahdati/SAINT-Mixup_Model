@@ -1,0 +1,80 @@
+SAINT+Mixup for Tabular BNPL Classification
+This code implements the SAINT architecture (Self-Attention and Intersample attention Transformer) enhanced with Mixup augmentation for robust binary classification on a BNPL dataset. It uses PyTorch for modeling and training.
+
+🔷 SECTION 1: Data Preprocessing
+Loads a CSV from Google Drive.
+
+Fills missing values, creates credit eligibility label (Target), and engineers new features:
+
+Age & credit-based conditions
+
+Aggregated purchase frequency & amount
+
+Repeat usage mapping
+
+Defines a credit recommendation logic (determine_credit) that assigns Credit Amount and Repayment Period.
+
+Splits data into training/test sets, and down-samples training data.
+
+🔷 SECTION 2: SAINT Model Architecture
+SAINTEncoder:
+Projects raw tabular input into embeddings.
+
+Passes through multiple TransformerEncoderLayers.
+
+Returns the encoded vector for each sample.
+
+SAINTMixup:
+Combines SAINT encoder with an MLP head:
+
+BatchNorm + Dropout + ReLU
+
+Final output layer with 2 logits (binary classification)
+
+🔷 SECTION 3: Mixup Strategy
+Implements Mixup augmentation on input features and labels:
+
+Generates linear combinations of samples.
+
+Uses combined loss from both targets:
+loss = λ * CE(y₁) + (1 - λ) * CE(y₂)
+
+🔷 SECTION 4: Training Loop
+Trains the SAINT model with CrossEntropyLoss and AdamW.
+
+Tracks training loss, training accuracy, and validation accuracy per epoch.
+
+Validation performed after each epoch on unseen test data.
+
+🔷 SECTION 5: Evaluation
+Predicts class probabilities on test set.
+
+Computes optimal KS threshold for binary classification.
+
+Calculates standard metrics:
+
+Accuracy, Recall, Precision, F1 Score, AUC, KS Statistic
+
+Confusion Matrix
+
+🔷 SECTION 6: Visualization
+KS Curve
+
+ROC Curve
+
+Precision-Recall Curve
+
+Lift and Gain Charts
+
+Train/Val Accuracy & Loss curves
+
+Confusion Matrix (basic + enhanced)
+
+🔷 SECTION 7: Explainability (SHAP)
+Builds a SimpleModel to run SHAP explainability.
+
+Shows feature importance using shap.summary_plot.
+
+🔷 SECTION 8: Output
+Saves the final data (with predictions) to a CSV named:
+customer_credit_offers_SAINT.csv
